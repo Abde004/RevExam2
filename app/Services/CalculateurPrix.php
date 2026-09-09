@@ -1,43 +1,51 @@
-name: CI Laravel
+<?php
+namespace App\Services;
 
-on:
-  push:
-    branches: ["*"]
+class CalculateurPrix
+{
+    /**
+     * Calcule le prix TTC à partir d'un prix HT et d'un taux de taxe.
+     * Le taux de taxe est exprimé en décimal (ex: 0.15 pour 15%).
+     *
+     * @throws \InvalidArgumentException si le taux est négatif
+     */
+    public function calculerAvecTaxe(float $prixHT, float $tauxTaxe): float
+    {
+        if ($tauxTaxe < 0) {
+            throw new \InvalidArgumentException("Le taux de taxe ne peut pas être négatif.");
+        }
 
-  pull_request:
-    branches: [main]
+        return round($prixHT * (1 + $tauxTaxe), 2);
+    }
 
-jobs:
-  tests:
-    runs-on: ubuntu-latest
+    /**
+     * Applique une remise en pourcentage sur un prix.
+     * La remise ne peut pas rendre le prix négatif.
+     *
+     * @throws \InvalidArgumentException si la remise est négative
+     */
+    public function appliquerRemise(float $prix, float $remisePourcentage): float
+    {
+        if ($remisePourcentage < 0) {
+            throw new \InvalidArgumentException("La remise ne peut pas être négative.");
+        }
 
-    steps:
-      - name: Checkout du code
-        uses: actions/checkout@v4
+        $prixApresRemise = $prix - ($prix * $remisePourcentage / 100);
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.4"
-          extensions: pdo, pdo_mysql, mbstring, bcmath
-          coverage: xdebug
+        return max(0, round($prixApresRemise, 2));
+    }
 
-      - name: Installer les dépendances
-        run: composer install --no-interaction --prefer-dist
+    /**
+     * Vérifie si un prix respecte un seuil minimum.
+     *
+     * @throws \InvalidArgumentException si le seuil est négatif
+     */
+    public function respecteSeuilMinimum(float $prix, float $seuilMinimum): bool
+    {
+        if ($seuilMinimum < 0) {
+            throw new \InvalidArgumentException("Le seuil minimum ne peut pas être négatif.");
+        }
 
-      - name: Préparer le .env de test
-        run: |
-          cp .env.example .env.testing
-          php artisan key:generate --env=testing
-
-      - name: Lancer les tests
-        run: php artisan test
-
-      - name: Tests avec couverture HTML
-        run: php artisan test --coverage-html reports/coverage
-
-      - name: Publier le rapport de couverture
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: reports/coverage
+        return $prix >= $seuilMinimum;
+    }
+}
