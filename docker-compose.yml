@@ -45,7 +45,6 @@ services:
 
     volumes:
       - .:/app
-      - ~/.ssh:/root/.ssh:ro
 
     entrypoint: ["tail", "-f", "/dev/null"]
 
