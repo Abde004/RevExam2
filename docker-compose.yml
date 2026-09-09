@@ -38,6 +38,9 @@ services:
       context: .
       dockerfile: docker/node/Dockerfile
 
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+
     working_dir: /app
 
     volumes:
