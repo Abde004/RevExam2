@@ -43,6 +43,24 @@ jobs:
       - name: Analyse statique PHPStan
         run: ./vendor/bin/phpstan analyse --no-progress --memory-limit=512M
 
+    audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+
+      - name: Installer les dépendances
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Audit des dépendances
+        run: composer audit
+
   tests:
     runs-on: ubuntu-latest
     needs: [lint, analyse]
@@ -73,3 +91,4 @@ jobs:
         with:
           name: coverage-report
           path: reports/coverage
+
