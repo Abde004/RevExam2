@@ -16,7 +16,7 @@ class CalculateurPrix
             throw new \InvalidArgumentException('Taux négatif.');
         }
 
-    return round($prixHT * (1 + $tauxTaxe), 2);
+        return round($prixHT * (1 + $tauxTaxe), 2);
     }
 
     /**
