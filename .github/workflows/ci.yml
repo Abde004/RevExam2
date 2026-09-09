@@ -9,10 +9,11 @@ jobs:
 
     steps:
       - name: Dire bonjour
-        run: echo "Bonjour depuis GitHub Actions !"
+        run: echo "Je suis le job bonjour"
 
-      - name: Afficher la date
-        run: date
+  aurevoir:
+    runs-on: ubuntu-latest
 
-      - name: Afficher le répertoire de travail
-        run: pwd
+    steps:
+      - name: Dire au revoir
+        run: echo "Je suis le job aurevoir"
