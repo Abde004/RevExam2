@@ -33,6 +33,24 @@ services:
     networks:
       - laravel
 
+  node:
+    build:              # utiliser le dockerfile
+      context: .
+      dockerfile: docker/node/Dockerfile
+
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+
+    working_dir: /app
+
+    volumes:
+      - .:/app
+
+    entrypoint: ["tail", "-f", "/dev/null"]
+
+    networks:
+      - laravel
+
 volumes:
   mysql_data:
 

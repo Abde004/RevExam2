@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
 use App\Services\CalculateurPrix;
+use PHPUnit\Framework\TestCase;
 
 class CalculateurPrixTest extends TestCase
 {
@@ -13,7 +13,7 @@ class CalculateurPrixTest extends TestCase
     public function test_calcul_prix_avec_taxe_standard(): void
     {
         // Arrange
-        $calculateur = new CalculateurPrix();
+        $calculateur = new CalculateurPrix;
 
         // Act
         $resultat = $calculateur->calculerAvecTaxe(100.00, 0.15);
